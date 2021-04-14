@@ -29,11 +29,7 @@ namespace CintTestTask.Domain.Services
 
         public void SetInitialPosition(TileCoordinates initialCoordinates)
         {
-            _cleanerCoordinates = new TileCoordinates
-            {
-                X = initialCoordinates.X,
-                Y = initialCoordinates.Y,
-            };
+            _cleanerCoordinates = initialCoordinates;
             _clearedTiles.Add(_cleanerCoordinates); // Assuming initial tile is cleared anyway
         }
 

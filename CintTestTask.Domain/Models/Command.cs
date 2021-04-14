@@ -2,8 +2,8 @@
 {
     public class Command
     {
-        public char Direction;
+        public char Direction { get; set; }
 
-        public int TilesNumber;
+        public int TilesNumber { get; set; }
     }
 }

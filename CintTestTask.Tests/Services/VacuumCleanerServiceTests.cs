@@ -1,4 +1,5 @@
-﻿using CintTestTask.Domain.Models;
+﻿using CintTestTask.Domain.Constants;
+using CintTestTask.Domain.Models;
 using CintTestTask.Domain.Services;
 using NUnit.Framework;
 using System;
@@ -102,6 +103,34 @@ namespace Tests.Services
             {
                 vacuumCleanerService.Move(command);
             }
+
+            var actualNumber = vacuumCleanerService.GetClearedTilesNumber();
+            Assert.AreEqual(expectedNumber, actualNumber);
+        }
+
+        [TestCase('E')]
+        [TestCase('W')]
+        [TestCase('S')]
+        [TestCase('N')]
+        public void MoveDoesNotViolateBoundariesOfCleaningArea(char direction)
+        {
+            var vacuumCleanerService = new VacuumCleanerService();
+            var initialPosition = new TileCoordinates
+            {
+                X = direction == 'E' ? VacuumCleanerConstants.MaxTileCoordinate : -VacuumCleanerConstants.MaxTileCoordinate,
+                Y = direction == 'N' ? VacuumCleanerConstants.MaxTileCoordinate : -VacuumCleanerConstants.MaxTileCoordinate,
+            };
+
+            vacuumCleanerService.SetInitialPosition(initialPosition);
+
+            var command = new Command
+            {
+                Direction = direction,
+                TilesNumber = 100,
+            };
+
+            var expectedNumber = 1;
+            vacuumCleanerService.Move(command);
 
             var actualNumber = vacuumCleanerService.GetClearedTilesNumber();
             Assert.AreEqual(expectedNumber, actualNumber);

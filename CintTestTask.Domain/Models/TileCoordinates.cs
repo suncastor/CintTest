@@ -1,9 +1,9 @@
 ﻿namespace CintTestTask.Domain.Models
 {
-    public class TileCoordinates
+    public struct TileCoordinates
     {
-        public int X;
+        public int X { get; set; }
 
-        public int Y;
+        public int Y { get; set; }
     }
 }

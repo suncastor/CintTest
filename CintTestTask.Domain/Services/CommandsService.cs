@@ -33,10 +33,18 @@ namespace CintTestTask.Domain.Services
 
         private void InitVacuumCleaner()
         {
+            _commandsNumber = _communicationService.ReadNumberOfCommands();
+            var initialPosition = _communicationService.ReadInitialPosition();
+            _vacuumCleanerService.SetInitialPosition(initialPosition);
         }
 
         private void ProcessCleaningCommands()
         {
+            for(var i = 0; i < _commandsNumber; i++)
+            {
+                var command = _communicationService.ReadCommand();
+                _vacuumCleanerService.Move(command);
+            }
         }
     }
 }

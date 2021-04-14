@@ -17,7 +17,7 @@ namespace CintTestTask.Domain.Services
             };
         }
 
-        public TileCoordinates ReadInitialCoordinates()
+        public TileCoordinates ReadInitialPosition()
         {
             var coordinatesString = Console.ReadLine();
             var coordinates = coordinatesString.Split(' ');

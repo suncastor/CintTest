@@ -39,7 +39,7 @@ namespace CintTestTask.Tests.Services
         {
             _commandsService.ProcessCleaning();
             _communicationServiceMock.Verify(x => x.ReadNumberOfCommands(), Times.Once);
-            _communicationServiceMock.Verify(x => x.ReadInitialCoordinates(), Times.Once);
+            _communicationServiceMock.Verify(x => x.ReadInitialPosition(), Times.Once);
             _communicationServiceMock.Verify(x => x.Write(It.IsAny<string>()), Times.Once);
         }
 
@@ -51,7 +51,7 @@ namespace CintTestTask.Tests.Services
                 X = _randomGenerator.Next(-100, 100),
                 Y = _randomGenerator.Next(-100, 100),
             };
-            _communicationServiceMock.Setup(x => x.ReadInitialCoordinates()).Returns(initialCoordinates);
+            _communicationServiceMock.Setup(x => x.ReadInitialPosition()).Returns(initialCoordinates);
 
             _commandsService.ProcessCleaning();
             _vacuumCleanerServiceMock.Verify(x => x.SetInitialPosition(initialCoordinates), Times.Once);
@@ -83,7 +83,7 @@ namespace CintTestTask.Tests.Services
             _vacuumCleanerServiceMock.Setup(x => x.GetClearedTilesNumber()).Returns(clearedTilesNumber);
 
             _commandsService.ProcessCleaning();
-            _communicationServiceMock.Verify(x => x.Write(It.Is<string>(y => y.Contains($"clearedTilesNumber"))), Times.Once);
+            _communicationServiceMock.Verify(x => x.Write(It.Is<string>(y => y.Contains($"{ clearedTilesNumber }"))), Times.Once);
         }
     }
 }

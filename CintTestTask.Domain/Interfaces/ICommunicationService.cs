@@ -8,7 +8,7 @@ namespace CintTestTask.Domain.Interfaces
 
         int ReadNumberOfCommands();
 
-        TileCoordinates ReadInitialCoordinates();
+        TileCoordinates ReadInitialPosition();
 
         Command ReadCommand();
     }

@@ -1,4 +1,5 @@
-﻿using Domain.Services;
+﻿using CintTestTask.Domain.Models;
+using CintTestTask.Domain.Services;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -20,10 +21,13 @@ namespace Tests.Services
         public void SetInitialPositionShouldNotThrowException()
         {
             var vacuumCleanerService = new VacuumCleanerService();
-            var x = _randomGenerator.Next();
-            var y = _randomGenerator.Next();
+            var initialPosition = new TileCoordinates
+            {
+                X = _randomGenerator.Next(),
+                Y = _randomGenerator.Next(),
+            };
 
-            Assert.DoesNotThrow(() => vacuumCleanerService.SetInitialPosition(x, y));
+            Assert.DoesNotThrow(() => vacuumCleanerService.SetInitialPosition(initialPosition));
         }
 
         [Test]
@@ -31,10 +35,13 @@ namespace Tests.Services
         {
             var vacuumCleanerService = new VacuumCleanerService();
             var directionIndex = _randomGenerator.Next(0, 3);
-            var direction = new char[] { 'E', 'W', 'S', 'N' }[directionIndex];
-            var tilesNumber = _randomGenerator.Next();
+            var command = new Command
+            {
+                Direction = new char[] { 'E', 'W', 'S', 'N' }[directionIndex],
+                TilesNumber = _randomGenerator.Next(),
+            };
 
-            Assert.DoesNotThrow(() => vacuumCleanerService.Move(direction, tilesNumber));
+            Assert.DoesNotThrow(() => vacuumCleanerService.Move(command));
         }
 
         [TestCase('E')]
@@ -43,53 +50,74 @@ namespace Tests.Services
         [TestCase('N')]
         public void MoveToDirectionShouldIncreaseNumberOfClearedTiles(char direction)
         {
-            var vacuumCleanerService = new VacuumCleanerService();
-            var tilesNumber = _randomGenerator.Next(-100000, 100000);
-            var expectedNumber = Math.Abs(tilesNumber) + 1;
+            var vacuumCleanerService = GetInitedService();
+            var command = new Command
+            {
+                Direction = direction,
+                TilesNumber = _randomGenerator.Next(0, 100000),
+            };
 
-            vacuumCleanerService.SetInitialPosition(0, 0);
-            vacuumCleanerService.Move(direction, tilesNumber);
+            var expectedNumber = Math.Abs(command.TilesNumber) + 1;
+            
+            vacuumCleanerService.Move(command);
             var actualNumber = vacuumCleanerService.GetClearedTilesNumber();
-
-            Assert.Equals(expectedNumber, actualNumber);
+            Assert.AreEqual(expectedNumber, actualNumber);
         }
 
         [Test]
         public void EachMoveCallInARowShouldIncreaseNumberOfClearedTiles()
         {
-            var vacuumCleanerService = new VacuumCleanerService();
+            var vacuumCleanerService = GetInitedService();
             var directionsToMove = new char[] { 'E', 'S' };
-            var stepsToMove = directionsToMove.Select(x => _randomGenerator.Next(-50000, 50000)).ToArray();
-            var expectedNumber = stepsToMove.Sum() + 1;
-
-            vacuumCleanerService.SetInitialPosition(0, 0);
-            for(var i = 0; i < directionsToMove.Length; i++)
+            var commands = directionsToMove.Select(x => new Command
             {
-                vacuumCleanerService.Move(directionsToMove[i], stepsToMove[i]);
+                Direction = x,
+                TilesNumber = _randomGenerator.Next(0, 50000),
+            }).ToArray();
+
+            var expectedNumber = commands.Sum(x => x.TilesNumber) + 1;
+            foreach(var command in commands)
+            {
+                vacuumCleanerService.Move(command);
             }
 
             var actualNumber = vacuumCleanerService.GetClearedTilesNumber();
-            
-            Assert.Equals(expectedNumber, actualNumber);
+            Assert.AreEqual(expectedNumber, actualNumber);
         }
 
         [Test]
         public void MoveDoesNotIncreaseNumberOfClearedTilesIfTheyAreAlreadyCleared()
         {
-            var vacuumCleanerService = new VacuumCleanerService();
+            var vacuumCleanerService = GetInitedService();
+            var tilesToMoveInOneDirection = 100;
             var directionsToMove = new char[] { 'E', 'W' };
-            var stepsToMove = directionsToMove.Select(x => 100).ToArray();
-            var expectedNumber = stepsToMove[0] + 1;
-
-            vacuumCleanerService.SetInitialPosition(0, 0);
-            for(var i = 0; i < directionsToMove.Length; i++)
+            var commands = directionsToMove.Select(x => new Command
             {
-                vacuumCleanerService.Move(directionsToMove[i], stepsToMove[i]);
+                Direction = x,
+                TilesNumber = tilesToMoveInOneDirection,
+            }).ToArray();
+
+            var expectedNumber = tilesToMoveInOneDirection + 1;
+            foreach (var command in commands)
+            {
+                vacuumCleanerService.Move(command);
             }
 
             var actualNumber = vacuumCleanerService.GetClearedTilesNumber();
-            
-            Assert.Equals(expectedNumber, actualNumber);
+            Assert.AreEqual(expectedNumber, actualNumber);
+        }
+
+        private VacuumCleanerService GetInitedService()
+        {
+            var vacuumCleanerService = new VacuumCleanerService();
+            var initialPosition = new TileCoordinates
+            {
+                X = 0,
+                Y = 0,
+            };
+
+            vacuumCleanerService.SetInitialPosition(initialPosition);
+            return vacuumCleanerService;
         }
     }
 }

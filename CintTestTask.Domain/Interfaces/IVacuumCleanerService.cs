@@ -1,10 +1,12 @@
-﻿namespace CintTestTask.Domain.Interfaces
+﻿using CintTestTask.Domain.Models;
+
+namespace CintTestTask.Domain.Interfaces
 {
     public interface IVacuumCleanerService
     {
-        void SetInitialPosition(int x, int y);
+        void SetInitialPosition(TileCoordinates coordinates);
 
-        void Move(char direction, int tilesNumber);
+        void Move(Command command);
 
         int GetClearedTilesNumber();
     }

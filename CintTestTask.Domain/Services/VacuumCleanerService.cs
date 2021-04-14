@@ -2,7 +2,7 @@
 using CintTestTask.Domain.Models;
 using System.Collections.Generic;
 
-namespace Domain.Services
+namespace CintTestTask.Domain.Services
 {
     public class VacuumCleanerService : IVacuumCleanerService
     {
@@ -18,12 +18,12 @@ namespace Domain.Services
             _cleanerCoordinates = new TileCoordinates();
         }
 
-        public void SetInitialPosition(int x, int y)
+        public void SetInitialPosition(TileCoordinates initialCoordinates)
         {
 
         }
 
-        public void Move(char direction, int tilesNumber)
+        public void Move(Command command)
         {
 
         }

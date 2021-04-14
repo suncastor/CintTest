@@ -1,6 +1,6 @@
 ﻿namespace CintTestTask.Domain.Models
 {
-    internal class TileCoordinates
+    public class TileCoordinates
     {
         public int X;
 

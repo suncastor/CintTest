@@ -9,8 +9,8 @@ namespace CintTestTask
         {
             var vacuumCleanerService = new VacuumCleanerService();
             var consoleCommunicationService = new ConsoleCommunicationService();
-            var commandsSermice = new CommandsService(vacuumCleanerService, consoleCommunicationService);
-            commandsSermice.ProcessCleaning();
+            var commandsService = new CommandsService(vacuumCleanerService, consoleCommunicationService);
+            commandsService.ProcessCleaning();
             Console.ReadKey();
         }
     }
